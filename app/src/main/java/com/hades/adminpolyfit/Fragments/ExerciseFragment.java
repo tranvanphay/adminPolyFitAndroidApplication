@@ -1,6 +1,8 @@
 package com.hades.adminpolyfit.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -28,6 +30,7 @@ import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.hades.adminpolyfit.Activity.SplashScreenActivity;
 import com.hades.adminpolyfit.Adapter.ExerciseAdapter;
 import com.hades.adminpolyfit.Constants.Constants;
 import com.hades.adminpolyfit.Interface.ReloadDataExercise;
@@ -203,8 +206,13 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
             statisticalFragment.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "tag");
             menuItem.setChecked(true);
         }
-        if (id == R.id.nav_third_fragment) {
-            Toast.makeText(getActivity(), "Fragment::" + id, Toast.LENGTH_SHORT).show();
+        if (id == R.id.logout) {
+            SharedPreferences.Editor sharedPreferences=getActivity().getSharedPreferences(Constants.LOGIN,Context.MODE_PRIVATE).edit();
+            sharedPreferences.putString("username","");
+            sharedPreferences.putString("password","");
+            sharedPreferences.apply();
+            startActivity(new Intent(getActivity(), SplashScreenActivity.class));
+            getActivity().finish();
             menuItem.setChecked(true);
         }
 

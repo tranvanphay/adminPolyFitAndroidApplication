@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -19,26 +20,41 @@ import java.util.Objects;
 
 public class PlayVideoActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
     YouTubePlayerView youTubePlayerView;
-    int REQUEST_RELOAD_VIDEO=999;
+    int REQUEST_RELOAD_VIDEO = 999;
     Dialog dialogQuotes;
+    String idVideo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_video);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        dialogQuotes=new Dialog(PlayVideoActivity.this);
+        dialogQuotes = new Dialog(PlayVideoActivity.this);
         dialogQuotes.setContentView(R.layout.layout_quotes);
         dialogQuotes.setCancelable(false);
         dialogQuotes.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        youTubePlayerView=(YouTubePlayerView)findViewById(R.id.playVideoView);
-        youTubePlayerView.initialize(Constants.YOUTUBE_KEY,this);
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) {
+            idVideo = bundle.getString("videoUrl");
+        }
+        Log.e("PhayTran", idVideo);
+        if (idVideo.length() > 40 && idVideo.length() > 35) {
+            idVideo = idVideo.substring(32);
+        } else if (idVideo.length() > 20) {
+            idVideo = idVideo.substring(17);
+            Log.e("PhayTran", "link short");
+        } else {
+            idVideo = "NjzUc5vZ-34";
+        }
+        youTubePlayerView = (YouTubePlayerView) findViewById(R.id.playVideoView);
+        youTubePlayerView.initialize(Constants.YOUTUBE_KEY, this);
     }
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, final YouTubePlayer youTubePlayer, boolean b) {
-        youTubePlayer.cueVideo("YdB1HMCldJY");
+        youTubePlayer.cueVideo(idVideo);
+        Log.e("PhayTran", "IDVideo ::: " + idVideo);
         youTubePlayer.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
             @Override
             public void onLoading() {
@@ -57,7 +73,7 @@ public class PlayVideoActivity extends YouTubeBaseActivity implements YouTubePla
 
             @Override
             public void onVideoStarted() {
-                if(dialogQuotes.isShowing()){
+                if (dialogQuotes.isShowing()) {
                     dialogQuotes.dismiss();
                 }
             }
@@ -76,9 +92,9 @@ public class PlayVideoActivity extends YouTubeBaseActivity implements YouTubePla
 
     @Override
     public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-        if(youTubeInitializationResult.isUserRecoverableError()){
-            youTubeInitializationResult.getErrorDialog(PlayVideoActivity.this,REQUEST_RELOAD_VIDEO);
-        }else {
+        if (youTubeInitializationResult.isUserRecoverableError()) {
+            youTubeInitializationResult.getErrorDialog(PlayVideoActivity.this, REQUEST_RELOAD_VIDEO);
+        } else {
             Toast.makeText(this, "ERROR!!!", Toast.LENGTH_SHORT).show();
         }
     }
@@ -86,8 +102,8 @@ public class PlayVideoActivity extends YouTubeBaseActivity implements YouTubePla
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==REQUEST_RELOAD_VIDEO){
-            youTubePlayerView.initialize(Constants.YOUTUBE_KEY,PlayVideoActivity.this);
+        if (requestCode == REQUEST_RELOAD_VIDEO) {
+            youTubePlayerView.initialize(Constants.YOUTUBE_KEY, PlayVideoActivity.this);
         }
     }
 }

@@ -17,6 +17,16 @@ public class Bodyparts {
     @SerializedName("updateAt")
     private String updateAt;
 
+    private boolean isChecked;
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
+
     public Bodyparts() {
     }
 

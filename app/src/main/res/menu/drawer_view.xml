@@ -12,9 +12,9 @@
             android:icon="@drawable/chart"
             android:title="Statistical" />
         <item
-            android:id="@+id/nav_third_fragment"
-            android:icon="@drawable/ic_diet"
-            android:title="Camera"
+            android:id="@+id/logout"
+            android:icon="@drawable/logout"
+            android:title="Logout"
             />
 
     </group>

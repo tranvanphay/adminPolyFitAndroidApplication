@@ -7,14 +7,18 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
+
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -50,7 +55,9 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -74,12 +81,17 @@ public class AddExercisesFragment extends DialogFragment implements View.OnClick
     String imgExercis = "";
     AdminPolyfitServices adminPolyfitServices;
     private CompositeSubscription mSubscriptions = new CompositeSubscription();
-    private AppCompatSpinner spinnerLevel,spinnerBodyParts;
+    private AppCompatSpinner spinnerLevel/*, spinnerBodyParts*/;
+    private AppCompatSpinner spinnerBodyParts;
     List<Level> listLevel;
     List<Bodyparts> bodypartsList;
+    Button btnCheck;
+
+
     public static AddExercisesFragment newInstance() {
         return new AddExercisesFragment();
     }
+
     private ProgressDialog progressDialog;
 
 
@@ -103,6 +115,7 @@ public class AddExercisesFragment extends DialogFragment implements View.OnClick
         progressDialog.setCancelable(false);
         getAllLevel();
         getAllBodyParts();
+
         return view;
     }
 
@@ -114,7 +127,11 @@ public class AddExercisesFragment extends DialogFragment implements View.OnClick
                 break;
             case R.id.saveNewExercise:
                 Log.e("PhayTran", "Save exercise");
-                saveImage();
+                if (edt_urlVideoExercise.getText().toString().length() < 25) {
+                    Toast.makeText(getActivity(), "Please enter video link", Toast.LENGTH_SHORT).show();
+                } else {
+                    saveImage();
+                }
                 break;
             case R.id.imv_imageExercise:
                 Log.e("PhayTran", "get image");
@@ -188,8 +205,9 @@ public class AddExercisesFragment extends DialogFragment implements View.OnClick
         edt_repsExercise = view.findViewById(R.id.edt_repsExercise);
         edt_restExercise = view.findViewById(R.id.edt_restExercise);
         edt_urlVideoExercise = view.findViewById(R.id.edt_urlVideoExercise);
-        spinnerLevel=view.findViewById(R.id.spinnerLevel);
-        spinnerBodyParts=view.findViewById(R.id.spinnerBodyParts);
+        spinnerLevel = view.findViewById(R.id.spinnerLevel);
+        spinnerBodyParts = view.findViewById(R.id.spinnerBodyParts);
+
     }
 
 
@@ -226,13 +244,21 @@ public class AddExercisesFragment extends DialogFragment implements View.OnClick
         int sets = Integer.parseInt(edt_setsExercise.getText().toString());
         int reps = Integer.parseInt(edt_repsExercise.getText().toString());
         int rest = Integer.parseInt(edt_restExercise.getText().toString());
-        int positionLevel=spinnerLevel.getSelectedItemPosition();
-        int idLevel=listLevel.get(positionLevel).getId();
-        int positionBodyParts=spinnerBodyParts.getSelectedItemPosition();
-        int idBodyParts=bodypartsList.get(positionBodyParts).getIdBodyPart();
+        int positionLevel = spinnerLevel.getSelectedItemPosition();
+        int idLevel = listLevel.get(positionLevel).getId();
+        int positionBodyParts = spinnerBodyParts.getSelectedItemPosition();
+        int idBodyParts = bodypartsList.get(positionBodyParts).getIdBodyPart();
         String videoUrl = edt_urlVideoExercise.getText().toString();
-        Log.e("phaytv",idBodyParts+"");
-        mSubscriptions.add(adminPolyfitServices.addExercise(title, introduction, content, tips, sets, reps, rest, videoUrl, imgExercis, idLevel,idBodyParts)
+        List<Integer> idList=new ArrayList<>();
+        for (int i=0;i<bodypartsList.size();i++){
+            Log.e("PhayTRan","list:::"+bodypartsList.size());
+            Log.e("PhayTRan","bodyparts ::: "+bodypartsList.get(i).isChecked());
+            if(bodypartsList.get(i).isChecked()){
+                idList.add(bodypartsList.get(i).getIdBodyPart());
+            }
+        }
+        Log.e("phaytv", idBodyParts + "");
+        mSubscriptions.add(adminPolyfitServices.addExercise(title, introduction, content, tips, sets, reps, rest, videoUrl, imgExercis, idLevel, idList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<String>() {
@@ -250,13 +276,14 @@ public class AddExercisesFragment extends DialogFragment implements View.OnClick
                             edt_urlVideoExercise.setText("");
                             progressDialog.dismiss();
                         } else {
-                            Log.e("phayTran",s);
+                            Log.e("phayTran", s);
                             Toast.makeText(getActivity(), "Failed!!!", Toast.LENGTH_SHORT).show();
                             progressDialog.dismiss();
                         }
                     }
                 }));
     }
+
     //Handle getAllLevel
     private void getAllLevel() {
         adminPolyfitServices.getAllLevel().enqueue(new Callback<String>() {
@@ -317,16 +344,19 @@ public class AddExercisesFragment extends DialogFragment implements View.OnClick
             }
         });
     }
-    private void setDataLevelSpinner(List<Level> levelList){
-        SpinnerLevelAdapter spinnerLevelAdapter=new SpinnerLevelAdapter(levelList,getActivity());
+
+    private void setDataLevelSpinner(List<Level> levelList) {
+        SpinnerLevelAdapter spinnerLevelAdapter = new SpinnerLevelAdapter(levelList, getActivity());
         spinnerLevel.setAdapter(spinnerLevelAdapter);
 
     }
 
-    private void setDataBodyPartsSpinner(List<Bodyparts> bodypartsList){
-        SpinnerBodyPartsAdapter spinnerBodyPartsAdapter=new SpinnerBodyPartsAdapter(bodypartsList,getActivity());
+    private void setDataBodyPartsSpinner(List<Bodyparts> bodypartsList) {
+        SpinnerBodyPartsAdapter spinnerBodyPartsAdapter = new SpinnerBodyPartsAdapter(bodypartsList, getActivity());
         spinnerBodyParts.setAdapter(spinnerBodyPartsAdapter);
 
     }
+
+
 }
 

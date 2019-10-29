@@ -23,9 +23,19 @@
         android:gravity="center"
         android:orientation="vertical">
         <LinearLayout
-
+            android:layout_marginHorizontal="50dp"
             android:layout_width="match_parent"
-            android:layout_height="100dp"/>
+            android:layout_height="100dp">
+            <TextView
+                android:id="@+id/tvAuthentication"
+                android:fontFamily="@font/big_shoulders_text_regular"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                android:textAlignment="center"
+                android:text="Please authenticate by fingerprint or retype the password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
         <LinearLayout
             android:layout_marginHorizontal="30dp"
             android:layout_width="match_parent"
@@ -70,6 +80,7 @@
 
             <TextView
                 android:text="or"
+                android:id="@+id/tvOr"
                 android:textSize="20sp"
                 android:textAlignment="center"
                 android:textColor="@color/white"

@@ -165,7 +165,7 @@ public class ViewExerciseFragment extends DialogFragment implements View.OnClick
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnPlayNow:
-                startActivity(new Intent(getActivity(), PlayVideoActivity.class));
+                startActivity(new Intent(getActivity(), PlayVideoActivity.class).putExtra("videoUrl",exercise.getVideo_url()));
                 break;
             case R.id.editExercise:
                 Log.e("PhayTran", "will edit");
@@ -428,8 +428,8 @@ public class ViewExerciseFragment extends DialogFragment implements View.OnClick
             @Override
             public void onSuccess(Void aVoid) {
                 Log.e("PhayTran", "onSuccess: deleted file");
-                if(dialog!=null){
-                    if(dialog.isShowing()){
+                if (dialog != null) {
+                    if (dialog.isShowing()) {
                         dialog.dismiss();
                     }
                 }
@@ -439,8 +439,8 @@ public class ViewExerciseFragment extends DialogFragment implements View.OnClick
             @Override
             public void onFailure(@NonNull Exception exception) {
                 Log.d("PhayTran", "onFailure: did not delete file");
-                if(dialog!=null){
-                    if(dialog.isShowing()){
+                if (dialog != null) {
+                    if (dialog.isShowing()) {
                         dialog.dismiss();
                     }
                 }

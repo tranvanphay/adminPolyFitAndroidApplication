@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.KeyguardManager;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -15,16 +16,21 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hades.adminpolyfit.Constants.Constants;
 import com.hades.adminpolyfit.R;
+import com.hades.adminpolyfit.Services.AdminPolyfitServices;
+import com.hades.adminpolyfit.Services.RetrofitClient;
 import com.ornach.nobobutton.NoboButton;
 
 import java.io.IOException;
@@ -43,15 +49,26 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
+import retrofit2.Retrofit;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
+
 public class SplashScreenActivity extends AppCompatActivity implements View.OnClickListener {
     private final int SPLASH_DISPLAY_LENGTH = 5000;
-    LinearLayout layoutLogin,layoutLogo;
+    LinearLayout layoutLogin, layoutLogo;
     Animation animation;
     NoboButton btnLogin;
     private KeyStore keyStore;
     private static final String KEY_NAME = "PHAYTRAN";
     private Cipher cipher;
     ImageView fingerPrint;
+    private AdminPolyfitServices adminPolyfitServices;
+    private CompositeSubscription mSubscriptions = new CompositeSubscription();
+    EditText edtUserName, edtPassword;
+    TextView tvOr,tvAuthentication;
+    String password;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -62,34 +79,43 @@ public class SplashScreenActivity extends AppCompatActivity implements View.OnCl
         Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_splash_screen);
         connectView();
+        Retrofit retrofit = RetrofitClient.getInstance();
+        adminPolyfitServices = retrofit.create(AdminPolyfitServices.class);
         OnStartApplication();
         showLogo();
-        setupFingerPrint();
-    }
+//        setupFingerPrint();
+        checkIsLogin();
 
+    }
 
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.btnLogin:
-                login();
+                loginAdmin(edtUserName.getText().toString(), edtPassword.getText().toString());
                 break;
 
         }
     }
 
-    private void login() {
-        startActivity(new Intent(this,MainActivity.class));
+//    private void login() {
+////        startActivity(new Intent(this, MainActivity.class));
+//        loginUser();
+//    }
+
+    private void connectView() {
+        layoutLogin = findViewById(R.id.layoutLogin);
+        btnLogin = findViewById(R.id.btnLogin);
+        btnLogin.setOnClickListener(this);
+        layoutLogo = findViewById(R.id.layoutLogo);
+        fingerPrint = findViewById(R.id.imvFinger);
+        edtUserName = findViewById(R.id.edtUsername);
+        edtPassword = findViewById(R.id.edtPassword);
+        tvOr=findViewById(R.id.tvOr);
+        tvAuthentication=findViewById(R.id.tvAuthentication);
     }
 
-    private void connectView(){
-        layoutLogin=findViewById(R.id.layoutLogin);
-        btnLogin=findViewById(R.id.btnLogin);
-        btnLogin.setOnClickListener(this);
-        layoutLogo=findViewById(R.id.layoutLogo);
-        fingerPrint=findViewById(R.id.imvFinger);
-    }
     private void OnStartApplication() {
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -110,15 +136,17 @@ public class SplashScreenActivity extends AppCompatActivity implements View.OnCl
             }
         }, SPLASH_DISPLAY_LENGTH);
     }
-    private void showLogo(){
+
+    private void showLogo() {
         layoutLogo.setVisibility(View.VISIBLE);
         animation = AnimationUtils.loadAnimation(getApplicationContext(),
                 R.anim.fade_in);
         layoutLogo.startAnimation(animation);
 
     }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private void setupFingerPrint(){
+    private void setupFingerPrint() {
         KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
         FingerprintManager fingerprintManager = (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
 
@@ -139,7 +167,7 @@ public class SplashScreenActivity extends AppCompatActivity implements View.OnCl
 
                 if (cipherInit()) {
                     FingerprintManager.CryptoObject cryptoObject = new FingerprintManager.CryptoObject(cipher);
-                    FingerPrintHandle helper = new FingerPrintHandle(this,fingerPrint);
+                    FingerPrintHandle helper = new FingerPrintHandle(this, fingerPrint,edtPassword,password);
                     helper.startAuthentication(fingerprintManager, cryptoObject);
 
                 }
@@ -226,6 +254,58 @@ public class SplashScreenActivity extends AppCompatActivity implements View.OnCl
         }
 
 
+    }
+
+    private void loginAdmin(final String userName, final String password) {
+        final ProgressDialog progressDialog = new ProgressDialog(SplashScreenActivity.this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Processing...");
+        progressDialog.setIndeterminate(false);
+        progressDialog.show();
+
+        mSubscriptions.add(adminPolyfitServices.loginAdmin(userName, password)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        if (s.contains("User does not exist")) {
+                            Toast.makeText(SplashScreenActivity.this, "" + s, Toast.LENGTH_SHORT).show();
+                            Log.e("PhayTV::", s);
+                            progressDialog.dismiss();
+                        } else {
+                            Toast.makeText(SplashScreenActivity.this, "Login success!", Toast.LENGTH_SHORT).show();
+                            SharedPreferences.Editor editor = getSharedPreferences(Constants.LOGIN, MODE_PRIVATE).edit();
+                            editor.putString("username", userName);
+                            editor.putString("password", password);
+                            editor.putString("token", s);
+                            editor.apply();
+                            progressDialog.dismiss();
+                            Log.e("PhayTran", "username:" + userName + "\n" + "password" + password);
+                            startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
+                            finish();
+                        }
+
+                    }
+                }));
+    }
+    private void checkIsLogin(){
+        SharedPreferences sharedPreferences=getSharedPreferences(Constants.LOGIN,MODE_PRIVATE);
+        String username = sharedPreferences.getString("username","");
+        password=sharedPreferences.getString("password","");
+        if(username.length()>0){
+            edtUserName.setText(username);
+            edtUserName.setFocusable(false);
+            fingerPrint.setVisibility(View.VISIBLE);
+            tvAuthentication.setVisibility(View.VISIBLE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                setupFingerPrint();
+            }
+        }else {
+            fingerPrint.setVisibility(View.GONE);
+            tvOr.setVisibility(View.GONE);
+            tvAuthentication.setVisibility(View.GONE);
+        }
     }
 
 }

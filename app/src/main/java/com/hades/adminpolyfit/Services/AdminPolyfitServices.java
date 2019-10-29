@@ -9,6 +9,8 @@ import com.hades.adminpolyfit.Model.Level;
 import com.hades.adminpolyfit.Model.Meals;
 import com.hades.adminpolyfit.Model.Quotes;
 
+import java.util.List;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -27,6 +29,13 @@ import rx.Observable;
  **/
 public interface AdminPolyfitServices {
 
+    //Login
+    @POST("user/login")
+    @FormUrlEncoded
+    Observable<String> loginAdmin(@Field("username") String username,
+                                 @Field("password") String password);
+
+    //Exercise
     @POST("exercises/create")
     @FormUrlEncoded
     Observable<String> addExercise(@Field("title") String title,
@@ -39,7 +48,7 @@ public interface AdminPolyfitServices {
                                    @Field("video_url") String videoUrl,
                                    @Field("image_url") String imageUrl,
                                    @Field("id_level") Integer idLevel,
-                                   @Field("bodypartsArr[]") int idBodyParts);
+                                   @Field("bodypartsArr[]") List<Integer> idBodyParts);
 
     @GET("exercises/getAll")
     Call<String> getAllExercise();
@@ -75,6 +84,7 @@ public interface AdminPolyfitServices {
                                @Field("id_meals") Integer idMeals,
                                @Field("description") String desDish,
                                @Field("ingredientsArr[]") Integer idIngredients);
+
     @DELETE("dishes/delete/{id}")
     Call<Dish> deleteDish(@Path("id") int id);
 
@@ -89,12 +99,13 @@ public interface AdminPolyfitServices {
                           @Field("calories") double calories,
                           @Field("image_url") String imageUrl/*,
                           @Field("polyfitMealId") Integer id_meals*/
-                          /*@Field("id_ingredients") Integer id_ingredients*/);
+            /*@Field("id_ingredients") Integer id_ingredients*/);
 
 
     //Dishes
     @GET("dishes/getAll")
     Call<String> getAllDish();
+
     //Meals
     @GET("meals/getAll")
     Call<String> getAllMeals();
@@ -103,7 +114,7 @@ public interface AdminPolyfitServices {
     @FormUrlEncoded
     Observable<String> addMeals(@Field("title") String title,
                                 @Field("image_url") String imageUrl,
-                                @Field("id_diets")Integer idDiets);
+                                @Field("id_diets") Integer idDiets);
 
     @PUT("meals/update")
     @FormUrlEncoded
@@ -118,10 +129,11 @@ public interface AdminPolyfitServices {
     //BodyParts
     @GET("bodyparts/getAll")
     Call<String> getAllBodyParts();
+
     @POST("bodyparts/create")
     @FormUrlEncoded
     Observable<String> addBodyParts(@Field("title") String title,
-                                @Field("image_url") String imageUrl);
+                                    @Field("image_url") String imageUrl);
 
     @PUT("bodyparts/update")
     @FormUrlEncoded
@@ -141,14 +153,15 @@ public interface AdminPolyfitServices {
     @FormUrlEncoded
     Observable<String> addQuotes(@Field("title") String title,
                                  @Field("image_url") String imageUrl);
+
     @DELETE("qoutes/delete/{id}")
     Call<Quotes> deleteQuotes(@Path("id") int id);
 
     @PUT("qoutes/update")
     @FormUrlEncoded
     Call<Quotes> updateQuotes(@Field("id") int id,
-                            @Field("title") String title,
-                            @Field("image_url") String description);
+                              @Field("title") String title,
+                              @Field("image_url") String description);
 
 
     //Ingredient
@@ -158,22 +171,27 @@ public interface AdminPolyfitServices {
     @POST("ingredients/create")
     @FormUrlEncoded
     Observable<String> addIngredient(@Field("title") String title,
-                                     @Field("image_url")  String imageUrl);
+                                     @Field("image_url") String imageUrl);
+
     @DELETE("ingredients/delete/{id}")
     Call<Ingredients> deleteIngredient(@Path("id") int id);
+
     @PUT("ingredients/update")
     @FormUrlEncoded
     Call<Ingredients> updateIngredients(@Field("id") int id,
                                         @Field("title") String title,
                                         @Field("image_url") String imageUrl);
+
     //Level
     @GET("level/getAll")
     Call<String> getAllLevel();
+
     @POST("level/create")
     @FormUrlEncoded
     Observable<String> addLevel(@Field("title") String title,
-                                     @Field("image") String imageUrl,
-                                     @Field("description") String description);
+                                @Field("image") String imageUrl,
+                                @Field("description") String description);
+
     @DELETE("level/delete/{id}")
     Call<Level> deleteLevel(@Path("id") int id);
 
