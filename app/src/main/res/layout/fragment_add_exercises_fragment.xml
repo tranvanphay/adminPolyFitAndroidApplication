@@ -43,7 +43,7 @@
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/imv_imageExercise"
-            android:src="@drawable/ic_launcher_foreground"
+            android:src="@drawable/null_image"
             android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="200dp"/>

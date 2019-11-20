@@ -1,7 +1,5 @@
 package com.hades.adminpolyfit.Activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,10 +11,8 @@ import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
-import com.hades.adminpolyfit.Constants.Constants;
+import com.hades.adminpolyfit.Utils.Constants;
 import com.hades.adminpolyfit.R;
-
-import java.util.Objects;
 
 public class PlayVideoActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
     YouTubePlayerView youTubePlayerView;
@@ -58,7 +54,7 @@ public class PlayVideoActivity extends YouTubeBaseActivity implements YouTubePla
         youTubePlayer.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
             @Override
             public void onLoading() {
-
+                onAdStarted();
             }
 
             @Override

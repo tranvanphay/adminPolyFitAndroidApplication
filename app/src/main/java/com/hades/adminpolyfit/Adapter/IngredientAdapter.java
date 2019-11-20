@@ -3,7 +3,6 @@ package com.hades.adminpolyfit.Adapter;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Build;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,19 +23,14 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.hades.adminpolyfit.Constants.Constants;
+import com.hades.adminpolyfit.Utils.Constants;
 import com.hades.adminpolyfit.Fragments.IngredientFragment;
-import com.hades.adminpolyfit.Fragments.MixFragment;
-import com.hades.adminpolyfit.Fragments.ViewDishFragment;
-import com.hades.adminpolyfit.Model.Bodyparts;
-import com.hades.adminpolyfit.Model.Dish;
 import com.hades.adminpolyfit.Model.Ingredients;
 import com.hades.adminpolyfit.R;
 import com.hades.adminpolyfit.Services.AdminPolyfitServices;
 import com.hades.adminpolyfit.Services.RetrofitClient;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import pl.droidsonroids.gif.GifImageView;
@@ -81,6 +74,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         Picasso.get().load(ingredientsList.get(position).getImageUrl()).into(holder.imageIngredient);
+        holder.imageIngredient.setClipToOutline(true);
         holder.titleIngredient.setText(ingredientsList.get(position).getTitle());
        /* holder.priceIngredient.setText(String.valueOf(ingredientsList.get(position).getPrice()));
         holder.unitIngredient.setText(ingredientsList.get(position).getUnit());*/
@@ -185,15 +179,19 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
         cardSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialogUpdate=new Dialog(context);
-                dialogUpdate.setContentView(R.layout.dialog_upload);
-                dialogUpdate.setCancelable(false);
-                dialogUpdate.show();
-                Ingredients ingredients=new Ingredients();
-                ingredients.setIdIngredients(ingredientsList.get(position).getIdIngredients());
-                ingredients.setTitle(edtTitle.getText().toString());
-                ingredients.setImageUrl(ingredientsList.get(position).getImageUrl());
-                handleUpdateIngredient(ingredients);
+             if(edtTitle.getText().toString().length()<1){
+                 Toast.makeText(context, "Please enter title", Toast.LENGTH_SHORT).show();
+             }else {
+                 dialogUpdate=new Dialog(context);
+                 dialogUpdate.setContentView(R.layout.dialog_upload);
+                 dialogUpdate.setCancelable(false);
+                 dialogUpdate.show();
+                 Ingredients ingredients=new Ingredients();
+                 ingredients.setIdIngredients(ingredientsList.get(position).getIdIngredients());
+                 ingredients.setTitle(edtTitle.getText().toString());
+                 ingredients.setImageUrl(ingredientsList.get(position).getImageUrl());
+                 handleUpdateIngredient(ingredients);
+             }
             }
         });
     }

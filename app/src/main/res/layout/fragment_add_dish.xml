@@ -38,16 +38,31 @@
         <ImageView
             android:layout_gravity="center"
             android:id="@+id/imvAddDish"
-            android:src="@drawable/ic_launcher_foreground"
+            android:src="@drawable/null_image"
             android:layout_width="200dp"
             android:layout_height="200dp"/>
-        <Spinner
-            android:layout_marginHorizontal="50dp"
-            android:textAlignment="center"
-            android:id="@+id/spnMeals"
-            android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+      <LinearLayout
+          android:orientation="horizontal"
+          android:layout_weight="2"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+          <Spinner
+              android:layout_weight="1"
+              android:textAlignment="center"
+              android:id="@+id/spnMeals"
+              android:layout_marginTop="20dp"
+              android:layout_width="match_parent"
+              android:layout_marginRight="5dp"
+              android:layout_height="wrap_content"/>
+          <Spinner
+              android:layout_marginLeft="5dp"
+              android:layout_weight="1"
+              android:textAlignment="center"
+              android:id="@+id/spnIngredient"
+              android:layout_marginTop="20dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"/>
+      </LinearLayout>
         <EditText
             android:id="@+id/titleDish"
             android:textColor="@color/white"
@@ -108,10 +123,14 @@
         <EditText
             android:id="@+id/desDish"
             android:textColor="@color/white"
-            android:hint="Title"
+            android:hint="Description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>
+    <Button
+        android:id="@+id/send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 
 
@@ -124,6 +143,7 @@
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/btnAddDish"
                 app:cardBackgroundColor="@color/white"

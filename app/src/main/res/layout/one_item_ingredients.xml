@@ -13,6 +13,10 @@
         android:background="@drawable/radius_image"
         android:scaleType="centerCrop"
         android:src="@drawable/loading" />
+    <RelativeLayout
+        android:background="@drawable/background_title_one_item"
+        android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <LinearLayout
         android:id="@+id/layoutTitle"
         android:layout_width="match_parent"
@@ -28,16 +32,16 @@
                 android:padding="10dp"
                 android:id="@+id/titleIngredient"
                 android:text="title"
-                android:textSize="25sp"
-                android:textColor="@color/blue_white"
+                android:textSize="20sp"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <ImageView
                 android:id="@+id/popupIngredient"
                 android:layout_gravity="center"
                 android:src="@drawable/popup_ic"
-                android:layout_width="30sp"
-                android:layout_height="30sp"/>
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
         </LinearLayout>
     </LinearLayout>
     <RelativeLayout
@@ -102,5 +106,5 @@
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
-
+</RelativeLayout>
 </RelativeLayout>

@@ -175,4 +175,12 @@
         </LinearLayout>
     </LinearLayout>
     </LinearLayout>
+    <EditText
+        android:layout_margin="10dp"
+        android:textSize="18sp"
+        android:text="Description"
+        android:textColor="@color/white"
+        android:id="@+id/tv_desDish"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>

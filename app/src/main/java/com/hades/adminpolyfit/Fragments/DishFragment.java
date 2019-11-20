@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -49,6 +50,7 @@ public class DishFragment extends Fragment implements View.OnClickListener {
     private String mParam2;
     private OnFragmentInteractionListener mListener;
     CardView btnAddDish;
+    Button send;
     ImageView reloadDish;
     AdminPolyfitServices adminPolyfitServices;
     RecyclerView viewDish;
@@ -123,9 +125,9 @@ public class DishFragment extends Fragment implements View.OnClickListener {
                 addDishFragment.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "tag");
                 break;
             case R.id.reloadDish:
-
                 getAllDish();
                 break;
+
         }
     }
 
@@ -135,6 +137,7 @@ public class DishFragment extends Fragment implements View.OnClickListener {
         viewDish=view.findViewById(R.id.viewDish);
         reloadDish=view.findViewById(R.id.reloadDish);
         reloadDish.setOnClickListener(this);
+
     }
 
 

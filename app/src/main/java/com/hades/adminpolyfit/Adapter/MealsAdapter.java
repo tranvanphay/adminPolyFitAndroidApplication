@@ -23,10 +23,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.hades.adminpolyfit.Constants.Constants;
+import com.hades.adminpolyfit.Utils.Constants;
 import com.hades.adminpolyfit.Fragments.MixFragment;
-import com.hades.adminpolyfit.Model.Bodyparts;
-import com.hades.adminpolyfit.Model.Level;
 import com.hades.adminpolyfit.Model.Meals;
 import com.hades.adminpolyfit.R;
 import com.hades.adminpolyfit.Services.AdminPolyfitServices;
@@ -80,7 +78,12 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.ViewHolder> 
         holder.titleMeals.setText(mealsList.get(position).getTitle());
         Picasso.get().load(mealsList.get(position).getImageUrl()).into(holder.imageMeals);
         holder.imageMeals.setClipToOutline(true);
+        holder.setItemClickListener(new ItemClickListener() {
+            @Override
+            public void onClick(View view, int posittion) {
 
+            }
+        });
         holder.deleteMeals.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -99,7 +99,7 @@
         </RelativeLayout>
     </LinearLayout>
     <ImageView
-        android:src="@drawable/ic_launcher_foreground"
+        android:src="@drawable/null_image"
         android:id="@+id/imvExercise"
         android:layout_gravity="center"
         android:layout_width="200dp"
@@ -169,6 +169,7 @@
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:text="set"
+                    android:inputType="numberDecimal"
                     android:layout_weight="0.5"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -190,6 +191,7 @@
                     android:gravity="center"
                     android:textColor="@color/white"
                     android:textSize="20sp"
+                    android:inputType="numberDecimal"
                     android:text="repeat"
                     android:layout_weight="0.5"
                     android:layout_width="0dp"
@@ -212,6 +214,7 @@
                     android:gravity="center"
                     android:textColor="@color/white"
                     android:textSize="20sp"
+                    android:inputType="numberDecimal"
                     android:text="Rest"
                     android:layout_weight="0.5"
                     android:layout_width="0dp"

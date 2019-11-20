@@ -15,7 +15,7 @@
             android:layout_alignTop="@+id/layoutTitle"
             android:layout_marginTop="-10dp"
             android:background="@drawable/radius_image"
-            android:scaleType="fitXY"
+            android:scaleType="center"
             android:src="@drawable/loading" />
         <LinearLayout
             android:id="@+id/layoutTitle"

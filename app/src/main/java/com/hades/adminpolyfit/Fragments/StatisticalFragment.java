@@ -4,8 +4,6 @@ import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -15,20 +13,23 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.gson.Gson;
@@ -36,6 +37,7 @@ import com.google.gson.reflect.TypeToken;
 import com.hades.adminpolyfit.Model.Dish;
 import com.hades.adminpolyfit.Model.Exercise;
 import com.hades.adminpolyfit.Model.Quotes;
+import com.hades.adminpolyfit.Model.User;
 import com.hades.adminpolyfit.R;
 import com.hades.adminpolyfit.Services.AdminPolyfitServices;
 import com.hades.adminpolyfit.Services.RetrofitClient;
@@ -47,8 +49,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import pl.droidsonroids.gif.GifImageView;
 import retrofit2.Call;
@@ -63,11 +63,16 @@ public class StatisticalFragment extends DialogFragment implements View.OnClickL
     private AdminPolyfitServices adminPolyfitServices;
     private ImageView imvBackStatistical;
     List<Exercise> exercisesList = new ArrayList<>();
+    List<User> lisAllUser = new ArrayList<>();
+    List<User> listOnline = new ArrayList<>();
     List<Dish> listDish = new ArrayList<>();
-    List<Quotes> quotesList=new ArrayList<>();
+    List<Quotes> quotesList = new ArrayList<>();
     TextView statisticalExercise, statisticalDishes;
     GifImageView exerciseAnim, dishAnim;
+    ImageView imvPrevius, imvNext;
     private PieChart mChart;
+    private BarChart mBarChart;
+    LinearLayout pieChart, barChart;
 
     public static StatisticalFragment newInstance() {
         StatisticalFragment fragment = new StatisticalFragment();
@@ -85,12 +90,14 @@ public class StatisticalFragment extends DialogFragment implements View.OnClickL
                              Bundle savedInstanceState) {
         Objects.requireNonNull(getActivity()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         View view = inflater.inflate(R.layout.fragment_statistical, container, false);
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         Retrofit retrofit = RetrofitClient.getInstance();
         adminPolyfitServices = retrofit.create(AdminPolyfitServices.class);
-        getAllDish();
         getAllExercise();
+        getAllDish();
         getAllQuotes();
+        getAllUser();
+        getAllUserOnline();
         connectView(view);
         moveOffScreen();
         mChart.setUsePercentValues(true);
@@ -114,6 +121,40 @@ public class StatisticalFragment extends DialogFragment implements View.OnClickL
 
         return view;
     }
+    String[] barData = new String[]{"Exercises", "Dishes","Quotes"};
+    private void setBarChart() {
+        ArrayList<BarEntry> yVals = new ArrayList<>();
+        float value = (float) (Math.random() * 100);
+        yVals.add(new BarEntry(0, (int) exercisesList.size()));
+        yVals.add(new BarEntry(1, (int) listDish.size()));
+        yVals.add(new BarEntry(2, (int) quotesList.size()));
+        ArrayList<String> labels = new ArrayList<String>();
+        labels.add("Exercises");
+        labels.add("Dishes");
+        labels.add("Quotes");
+        BarDataSet set = new BarDataSet(yVals, "Data Set");
+        set.setColors(ColorTemplate.MATERIAL_COLORS);
+        set.setDrawValues(true);
+        set.setValueTextColor(Color.WHITE);
+        set.setValueTextSize(20f);
+
+   /*     Legend legend = mBarChart.getLegend();
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        legend.setTextColor(Color.WHITE);
+        legend.setDrawInside(false);
+        legend.setTextSize(20f);
+        legend.setYOffset(50f);*/
+        mBarChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
+        mBarChart.getXAxis().setTextColor(Color.WHITE);
+        BarData data = new BarData(set);
+        mBarChart.setData(data);
+        mBarChart.invalidate();
+        mBarChart.animateY(500);
+
+
+    }
 
     private void connectView(View view) {
         imvBackStatistical = view.findViewById(R.id.imvBackStatistical);
@@ -124,6 +165,14 @@ public class StatisticalFragment extends DialogFragment implements View.OnClickL
         dishAnim = view.findViewById(R.id.loadingStatisticalDish);
         mChart = view.findViewById(R.id.pieChart);
         mChart.setBackgroundColor(Color.BLACK);
+        mBarChart = view.findViewById(R.id.barChart);
+        mBarChart.getDescription().setEnabled(false);
+        imvNext = view.findViewById(R.id.imvNext);
+        imvNext.setOnClickListener(this);
+        imvPrevius = view.findViewById(R.id.imvPrevius);
+        imvPrevius.setOnClickListener(this);
+        pieChart = view.findViewById(R.id.viewPieChart);
+        barChart = view.findViewById(R.id.viewBarChart);
 
 
     }
@@ -133,6 +182,12 @@ public class StatisticalFragment extends DialogFragment implements View.OnClickL
         switch (view.getId()) {
             case R.id.imvBackStatistical:
                 this.dismiss();
+                break;
+            case R.id.imvPrevius:
+                previus();
+                break;
+            case R.id.imvNext:
+                next();
                 break;
         }
     }
@@ -165,7 +220,7 @@ public class StatisticalFragment extends DialogFragment implements View.OnClickL
                     exercisesList = gson.fromJson(jsonOutput, listType);
                     Log.e("Phaytv", /*exercisesList.get(0).getId() +*/":: Success ::" + array);
                     statisticalExercise.setText(String.valueOf(exercisesList.size()));
-                    setData();
+                    setBarChart();
                 }
             }
 
@@ -198,7 +253,7 @@ public class StatisticalFragment extends DialogFragment implements View.OnClickL
                     statisticalDishes.setVisibility(View.VISIBLE);
                     statisticalDishes.setText(String.valueOf(listDish.size()));
                     Log.e("Phaytv", /*exercisesList.get(0).getId() +*/":: Success ::" + array);
-                    setData();
+                    setBarChart();
                 }
             }
 
@@ -221,7 +276,7 @@ public class StatisticalFragment extends DialogFragment implements View.OnClickL
         mChart.setLayoutParams(params);
     }
 
-    String[] data = new String[]{"Exercises", "Dishes","Quotes"};
+    String[] data = new String[]{"Is Online", "Is Offline"/*,"Quotes"*/};
 
     private void setData() {
         ArrayList<PieEntry> values = new ArrayList<>();
@@ -230,12 +285,12 @@ public class StatisticalFragment extends DialogFragment implements View.OnClickL
             float val=(float)((listDish.size())+range/3);
             values.add(new PieEntry(val,data[i]));
         }*/
-        float val = (float) ((exercisesList.size()));
+        float val = (float) ((listOnline.size()));
         values.add(new PieEntry(val, data[0]));
-        float val1 = (float) ((listDish.size()));
+        float val1 = (float) ((lisAllUser.size() - listOnline.size()));
         values.add(new PieEntry(val1, data[1]));
-        float val2 = (float) ((quotesList.size()));
-        values.add(new PieEntry(val2, data[2]));
+        /*float val2 = (float) ((quotesList.size()));
+        values.add(new PieEntry(val2, data[2]));*/
 
         PieDataSet dataSet = new PieDataSet(values, "");
         dataSet.setSelectionShift(5f);
@@ -270,6 +325,36 @@ public class StatisticalFragment extends DialogFragment implements View.OnClickL
                     }.getType();
                     quotesList = gson.fromJson(jsonOutput, listType);
                     Log.e("Phaytv", /*exercisesList.get(0).getId() +*/":: Success ::" + array);
+                    setBarChart();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(getActivity(), "Please check your connection", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void getAllUser() {
+        adminPolyfitServices.getAllUsers().enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()) {
+                    Log.e("PhayTran", response.body());
+                    JSONArray array = null;
+                    try {
+                        JSONObject obj = new JSONObject(response.body());
+                        array = obj.getJSONArray("Response");
+                    } catch (Throwable t) {
+                        Log.e("PhayTV", "Error!!!");
+                    }
+                    Gson gson = new Gson();
+                    String jsonOutput = array.toString();
+                    Type listType = new TypeToken<List<User>>() {
+                    }.getType();
+                    lisAllUser = gson.fromJson(jsonOutput, listType);
+                    Log.e("Phaytv", /*exercisesList.get(0).getId() +*/":: Success ::" + array);
                     setData();
                 }
             }
@@ -280,5 +365,48 @@ public class StatisticalFragment extends DialogFragment implements View.OnClickL
             }
         });
     }
+
+    public void getAllUserOnline() {
+        adminPolyfitServices.getOnlineUser().enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()) {
+                    Log.e("PhayTran", response.body());
+                    JSONArray array = null;
+                    try {
+                        JSONObject obj = new JSONObject(response.body());
+                        array = obj.getJSONArray("Response");
+                    } catch (Throwable t) {
+                        Log.e("PhayTV", "Error!!!");
+                    }
+                    Gson gson = new Gson();
+                    String jsonOutput = array.toString();
+                    Type listType = new TypeToken<List<User>>() {
+                    }.getType();
+                    listOnline = gson.fromJson(jsonOutput, listType);
+                    Log.e("Phaytv", /*exercisesList.get(0).getId() +*/":: Success ::" + array);
+                    setData();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(getActivity(), "Please check your connection", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void next() {
+        pieChart.setVisibility(View.GONE);
+        barChart.setVisibility(View.VISIBLE);
+    }
+
+    private void previus() {
+        pieChart.setVisibility(View.VISIBLE);
+        barChart.setVisibility(View.GONE);
+
+    }
+
+
 
 }

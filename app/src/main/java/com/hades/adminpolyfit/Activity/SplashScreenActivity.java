@@ -27,7 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hades.adminpolyfit.Constants.Constants;
+import com.hades.adminpolyfit.Utils.Constants;
 import com.hades.adminpolyfit.R;
 import com.hades.adminpolyfit.Services.AdminPolyfitServices;
 import com.hades.adminpolyfit.Services.RetrofitClient;

@@ -1,8 +1,6 @@
 package com.hades.adminpolyfit.Fragments;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -10,29 +8,24 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -41,31 +34,21 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hades.adminpolyfit.Activity.PlayVideoActivity;
 import com.hades.adminpolyfit.BroadcastReceiver.ServiceReloadExercise;
-import com.hades.adminpolyfit.Constants.Constants;
-import com.hades.adminpolyfit.Interface.ReloadDataExercise;
+import com.hades.adminpolyfit.Utils.Constants;
 import com.hades.adminpolyfit.Model.Exercise;
-import com.hades.adminpolyfit.Model.Level;
 import com.hades.adminpolyfit.R;
 import com.hades.adminpolyfit.Services.AdminPolyfitServices;
 import com.hades.adminpolyfit.Services.RetrofitClient;
 import com.soundcloud.android.crop.Crop;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.lang.reflect.Type;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
-import okhttp3.ResponseBody;
 import pl.droidsonroids.gif.GifImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -88,7 +71,7 @@ public class ViewExerciseFragment extends DialogFragment implements View.OnClick
     String imageLink;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReferenceFromUrl(Constants.STORAGE_IMAGE);
-    ProgressDialog progressDialog;
+    Dialog progressDialog;
     AdminPolyfitServices adminPolyfitServices;
     CardView cancelDelete, acceptDelete;
     GifImageView processDelete;
@@ -104,10 +87,11 @@ public class ViewExerciseFragment extends DialogFragment implements View.OnClick
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NO_FRAME, R.style.Theme_AppCompat);
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Processing");
+        progressDialog = new Dialog(getActivity());
+        progressDialog.setContentView(R.layout.dialog_upload);
+//        progressDialog.setMessage("Processing");
         progressDialog.setCancelable(false);
-        progressDialog.setIndeterminate(false);
+//        progressDialog.setIndeterminate(false);
     }
 
     @Override
@@ -165,7 +149,7 @@ public class ViewExerciseFragment extends DialogFragment implements View.OnClick
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnPlayNow:
-                startActivity(new Intent(getActivity(), PlayVideoActivity.class).putExtra("videoUrl",exercise.getVideo_url()));
+                startActivity(new Intent(getActivity(), PlayVideoActivity.class).putExtra("videoUrl", exercise.getVideo_url()));
                 break;
             case R.id.editExercise:
                 Log.e("PhayTran", "will edit");
@@ -186,7 +170,26 @@ public class ViewExerciseFragment extends DialogFragment implements View.OnClick
             case R.id.saveEditExercise:
                 Log.e("PhayTran", "Saving edit");
 //                handleDeleteImage(exercise.getImage_url());
-                saveImage();
+                if (tv_videoUrl.getText().toString().length() < 25) {
+                    Toast.makeText(getActivity(), "Please enter video link", Toast.LENGTH_SHORT).show();
+                } else if (tv_Title.getText().toString().length() < 1) {
+                    Toast.makeText(getActivity(), "Please enter title", Toast.LENGTH_SHORT).show();
+                } else if (tv_Introduction.getText().toString().length() < 1) {
+                    Toast.makeText(getActivity(), "Please enter introduction", Toast.LENGTH_SHORT).show();
+                } else if (tv_Content.getText().toString().length() < 1) {
+                    Toast.makeText(getActivity(), "Please enter content", Toast.LENGTH_SHORT).show();
+                } else if (tv_Tips.getText().toString().length() < 1) {
+                    Toast.makeText(getActivity(), "Please enter tips", Toast.LENGTH_SHORT).show();
+                } else if (tv_Sets.getText().toString().length() < 1) {
+                    Toast.makeText(getActivity(), "Please enter set", Toast.LENGTH_SHORT).show();
+                } else if (tv_Reps.getText().toString().length() < 1) {
+                    Toast.makeText(getActivity(), "Please enter reps", Toast.LENGTH_SHORT).show();
+                } else if (tv_Rest.getText().toString().length() < 1) {
+                    Toast.makeText(getActivity(), "Please enter rest", Toast.LENGTH_SHORT).show();
+                } else {
+                    saveImage();
+                }
+
                 break;
             case R.id.imvExercise:
                 Crop.pickImage(getActivity(), ViewExerciseFragment.this);
@@ -210,7 +213,13 @@ public class ViewExerciseFragment extends DialogFragment implements View.OnClick
         exercise = (Exercise) getArguments().getSerializable("exercise");
         System.out.println(exercise);
         assert exercise != null;
-        Picasso.get().load(exercise.getImage_url()).into(imvExercise);
+//        Picasso.get().load(exercise.getImage_url()).into(imvExercise);
+        Glide
+                .with(this)
+                .load(exercise.getImage_url())
+                .centerCrop()
+                .placeholder(R.drawable.loading)
+                .into(imvExercise);
         tv_Title.setText(exercise.getTitle());
         tv_Introduction.setText(exercise.getIntroduction());
         tv_Content.setText(exercise.getContent());

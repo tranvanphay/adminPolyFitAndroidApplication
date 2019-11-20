@@ -26,8 +26,16 @@ public class Dish implements Serializable {
     private Integer idMeals;
     @SerializedName("description")
     private String description;
-    @SerializedName("id_ingredients")
+    @SerializedName("ingredientsArr")
     private Integer id_ingredients;
+
+    public Integer getId_ingredients() {
+        return id_ingredients;
+    }
+
+    public void setId_ingredients(Integer id_ingredients) {
+        this.id_ingredients = id_ingredients;
+    }
 
     public String getDescription() {
         return description;

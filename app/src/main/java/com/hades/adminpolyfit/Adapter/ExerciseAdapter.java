@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -26,6 +27,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hades.adminpolyfit.Fragments.ViewExerciseFragment;
@@ -44,6 +46,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import pl.droidsonroids.gif.GifImageView;
 import retrofit2.Call;
@@ -78,12 +81,19 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ViewHo
         return new ViewHolder(itemView);
     }
 
+    @SuppressLint("NewApi")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         getAllDetailExercise(listExercise.get(position).getId(),holder);
         holder.title.setText(listExercise.get(position).getTitle());
-        Picasso.get().load(listExercise.get(position).getImage_url()).placeholder(R.drawable.loading).into(holder.imageExercise);
+//        Picasso.get().load(listExercise.get(position).getImage_url()).placeholder(R.drawable.loading).into(holder.imageExercise);
+        Glide
+                .with(context)
+                .load(listExercise.get(position).getImage_url())
+                .centerCrop()
+                .placeholder(R.drawable.loading)
+                .into(holder.imageExercise);
         holder.imageExercise.setClipToOutline(true);
         holder.bodyParts.setText(bodyPartTitle);
         holder.setItemClickListener(new ItemClickListener() {
@@ -164,7 +174,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ViewHo
                     bodypartsList = gson.fromJson(jsonOutput, listType);
                     /*Log.e("PhayTranLOGGER",bodypartsList.get(0).getIdBodyPart()+"");*/
                     if(!bodypartsList.isEmpty()){
-                        viewHolder.bodyParts.setText(bodypartsList.get(0).getTitle());
+                       bodyPartTitle= bodypartsList.get(0).getTitle();
                     }
                     Log.e("Phaytv", /*exercisesList.get(0).getId() +*/":: ListBodyParts ::" + array);
                     System.out.println("Print object :::"+bodypartsList);
@@ -177,6 +187,15 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ViewHo
                 Toast.makeText(context, "Please check your connection", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private String joinList(List<Bodyparts> bodypartsList){
+        String joinedTitle = bodypartsList.stream()
+                .map(Bodyparts::getTitle)
+                .collect(Collectors.joining(", "));
+        Log.e("Joined",joinedTitle);
+        return joinedTitle;
     }
 
 

@@ -72,7 +72,8 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
                dish.setCarb(dishList.get(position).getCarb());
                dish.setCalories(dishList.get(position).getCalories());
                dish.setIdMeals(dishList.get(position).getIdMeals());
-               /*dish.setId_ingredients(dishList.get(position).getId_ingredients());*/
+               dish.setDescription(dishList.get(position).getDescription());
+//               /*dish.setId_ingredients(dishList.get(position).getId_ingredients());*/
                Bundle bundle = new Bundle();
                bundle.putSerializable("dish", dish);
                viewDishFragment.setArguments(bundle);

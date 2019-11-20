@@ -83,7 +83,7 @@ public interface AdminPolyfitServices {
                                @Field("calories") Double calories,
                                @Field("id_meals") Integer idMeals,
                                @Field("description") String desDish,
-                               @Field("ingredientsArr[]") Integer idIngredients);
+                               @Field("ingredientsArr[]") List<Integer> idIngredients);
 
     @DELETE("dishes/delete/{id}")
     Call<Dish> deleteDish(@Path("id") int id);
@@ -200,6 +200,11 @@ public interface AdminPolyfitServices {
     Call<Level> updateLevel(@Field("id") int id,
                             @Field("title") String title,
                             @Field("description") String description);
+    //User
+    @GET("user/getAllUsers")
+    Call<String> getAllUsers();
 
+    @GET("user/getOnlineUser")
+    Call<String> getOnlineUser();
 
 }

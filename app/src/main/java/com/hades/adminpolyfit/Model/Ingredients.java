@@ -17,6 +17,16 @@ public class Ingredients {
     @SerializedName("image_url")
     private String imageUrl;
 
+    private boolean isChecked;
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
+
     public Ingredients() {
     }
 

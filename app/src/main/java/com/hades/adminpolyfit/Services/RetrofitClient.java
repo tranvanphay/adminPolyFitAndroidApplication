@@ -1,13 +1,9 @@
 package com.hades.adminpolyfit.Services;
 
-import android.util.Base64;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hades.adminpolyfit.Constants.Constants;
+import com.hades.adminpolyfit.Utils.Constants;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;

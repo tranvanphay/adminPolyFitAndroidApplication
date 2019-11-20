@@ -1,10 +1,8 @@
 package com.hades.adminpolyfit.Adapter;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Build;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,24 +15,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.hades.adminpolyfit.Constants.Constants;
-import com.hades.adminpolyfit.Fragments.MixFragment;
+import com.hades.adminpolyfit.Utils.Constants;
 import com.hades.adminpolyfit.Fragments.QuotesFragment;
-import com.hades.adminpolyfit.Fragments.ViewExerciseFragment;
-import com.hades.adminpolyfit.Model.Dish;
-import com.hades.adminpolyfit.Model.Exercise;
-import com.hades.adminpolyfit.Model.Level;
 import com.hades.adminpolyfit.Model.Quotes;
 import com.hades.adminpolyfit.R;
 import com.hades.adminpolyfit.Services.AdminPolyfitServices;

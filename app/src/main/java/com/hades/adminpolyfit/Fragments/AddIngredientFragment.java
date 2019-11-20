@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.tasks.Continuation;
@@ -28,7 +29,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.hades.adminpolyfit.Constants.Constants;
+import com.hades.adminpolyfit.Utils.Constants;
 import com.hades.adminpolyfit.R;
 import com.hades.adminpolyfit.Services.AdminPolyfitServices;
 import com.hades.adminpolyfit.Services.RetrofitClient;
@@ -134,7 +135,15 @@ public class AddIngredientFragment extends DialogFragment implements View.OnClic
                 this.dismiss();
                 break;
             case R.id.btnAddIngredient:
-                saveData();
+                if (edtTitleIngredient.getText().toString().length() < 1) {
+                    Toast.makeText(getActivity(), "Please enter title", Toast.LENGTH_SHORT).show();
+                } else if (imvAddIngredient.getDrawable().getConstantState() ==
+                        ContextCompat.getDrawable(getActivity(), R.drawable.null_image).getConstantState()) {
+                    Toast.makeText(getActivity(), "Please insert picture", Toast.LENGTH_SHORT).show();
+                } else {
+                    saveData();
+                }
+
                 break;
         }
     }

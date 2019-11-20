@@ -44,7 +44,7 @@
             <TextView
                 android:layout_alignTop="@id/imageExercise"
                 android:id="@+id/titleExercise"
-                android:text="abc"
+                android:text="Title"
                 android:fontFamily="@font/anton"
                 android:layout_margin="10dp"
                 android:textSize="30dp"

@@ -32,10 +32,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.hades.adminpolyfit.Activity.PlayVideoActivity;
-import com.hades.adminpolyfit.Constants.Constants;
+import com.hades.adminpolyfit.Utils.Constants;
 import com.hades.adminpolyfit.Model.Dish;
-import com.hades.adminpolyfit.Model.Exercise;
 import com.hades.adminpolyfit.R;
 import com.hades.adminpolyfit.Services.AdminPolyfitServices;
 import com.hades.adminpolyfit.Services.RetrofitClient;
@@ -62,7 +60,7 @@ import static android.app.Activity.RESULT_OK;
 public class ViewDishFragment extends DialogFragment implements View.OnClickListener {
     private ImageView imvDish, imvBack, imvEdit, imvDelete;
     private TextView tvDelete;
-    private EditText tv_Title, tv_Protein, tv_Fat, tv_Carb, tv_Calories;
+    private EditText tv_Title, tv_Protein, tv_Fat, tv_Carb, tv_Calories,tv_desDish;
     private CardView saveEditDish, cancelEditDish;
     private RelativeLayout layoutOptionDish, layoutOptionEditDish;
     private Dish dish;
@@ -112,6 +110,7 @@ public class ViewDishFragment extends DialogFragment implements View.OnClickList
         tv_Fat = view.findViewById(R.id.tv_Fat);
         tv_Carb = view.findViewById(R.id.tv_Carb);
         tv_Calories = view.findViewById(R.id.tv_Calories);
+        tv_desDish=view.findViewById(R.id.tv_desDish);
         imvBack = view.findViewById(R.id.outViewDish);
         imvBack.setOnClickListener(this);
         imvEdit = view.findViewById(R.id.editDish);
@@ -159,7 +158,21 @@ public class ViewDishFragment extends DialogFragment implements View.OnClickList
             case R.id.saveEditDish:
                 Log.e("PhayTran", "Saving edit");
 //                handleDeleteImage(dish.getImageUrl());
-                saveImage();
+                if (tv_Title.getText().toString().length() < 1) {
+                    Toast.makeText(getActivity(), "Please enter title", Toast.LENGTH_SHORT).show();
+                } else if (tv_Protein.getText().toString().length() < 1) {
+                    Toast.makeText(getActivity(), "Please enter protein", Toast.LENGTH_SHORT).show();
+                } else if (tv_Fat.getText().toString().length() < 1) {
+                    Toast.makeText(getActivity(), "Please enter fat", Toast.LENGTH_SHORT).show();
+                } else if (tv_Carb.getText().toString().length() < 1) {
+                    Toast.makeText(getActivity(), "Please enter carb", Toast.LENGTH_SHORT).show();
+                } else if (tv_Calories.getText().toString().length() < 1) {
+                    Toast.makeText(getActivity(), "Please enter calories", Toast.LENGTH_SHORT).show();
+                } else if (tv_desDish.getText().toString().length() < 1) {
+                    Toast.makeText(getActivity(), "Please enter description", Toast.LENGTH_SHORT).show();
+                } else {
+                    saveImage();
+                }
                 break;
             case R.id.imvDish:
                 Crop.pickImage(getActivity(), ViewDishFragment.this);
@@ -189,6 +202,7 @@ public class ViewDishFragment extends DialogFragment implements View.OnClickList
         tv_Fat.setText(String.valueOf(dish.getFat()));
         tv_Carb.setText(String.valueOf(dish.getCarb()));
         tv_Calories.setText(String.valueOf(dish.getCalories()));
+        tv_desDish.setText(dish.getDescription());
     }
 
     private void disableFocus() {
@@ -203,6 +217,8 @@ public class ViewDishFragment extends DialogFragment implements View.OnClickList
         tv_Calories.setFocusable(false);
         tv_Calories.setBackgroundColor(Color.TRANSPARENT);
         imvDish.setClickable(false);
+        tv_desDish.setFocusable(false);
+        tv_desDish.setBackgroundColor(Color.TRANSPARENT);
     }
 
     private void enableFocus() {
@@ -219,6 +235,8 @@ public class ViewDishFragment extends DialogFragment implements View.OnClickList
         tv_Carb.setFocusable(true);
         tv_Calories.setFocusableInTouchMode(true);
         tv_Calories.setFocusable(true);
+        tv_desDish.setFocusableInTouchMode(true);
+        tv_desDish.setFocusable(true);
         imvDish.setClickable(true);
     }
 
