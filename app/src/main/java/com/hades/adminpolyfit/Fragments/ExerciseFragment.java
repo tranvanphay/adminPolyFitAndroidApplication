@@ -37,6 +37,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -236,7 +237,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
     }
 
 
-    private void  getAllExercise() {
+    public void  getAllExercise() {
         animation = AnimationUtils.loadAnimation(getActivity(),
                 R.anim.rotate);
         reloadExercise.startAnimation(animation);
@@ -257,6 +258,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
                     Type listType = new TypeToken<List<Exercise>>() {
                     }.getType();
                     List<Exercise> exercisesList = gson.fromJson(jsonOutput, listType);
+                    Collections.reverse(exercisesList);
                     setData(exercisesList);
                     Log.e("Phaytv", /*exercisesList.get(0).getId() +*/":: Success ::" + array);
 

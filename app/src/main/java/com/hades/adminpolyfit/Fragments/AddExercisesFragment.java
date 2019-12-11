@@ -25,6 +25,7 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
 
 import com.google.android.gms.tasks.Continuation;
@@ -37,6 +38,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.hades.adminpolyfit.Activity.MainActivity;
 import com.hades.adminpolyfit.Adapter.SpinnerBodyPartsAdapter;
 import com.hades.adminpolyfit.Adapter.SpinnerLevelAdapter;
 import com.hades.adminpolyfit.Utils.Constants;
@@ -91,8 +93,9 @@ public class AddExercisesFragment extends DialogFragment implements View.OnClick
     List<Level> listLevel;
     List<Bodyparts> bodypartsList;
     Button btnCheck;
-    List<User> userList=new ArrayList<>();
-    List<String> listToken=new ArrayList<>();
+    List<User> userList = new ArrayList<>();
+    List<String> listToken = new ArrayList<>();
+    boolean isAdded = false;
 
 
     public static AddExercisesFragment newInstance() {
@@ -119,7 +122,7 @@ public class AddExercisesFragment extends DialogFragment implements View.OnClick
         connectView(view);
         progressDialog = new Dialog(getActivity());
         progressDialog.setContentView(R.layout.dialog_upload);
-       /* progressDialog.setMessage(getString(R.string.processing));*/
+        /* progressDialog.setMessage(getString(R.string.processing));*/
         progressDialog.setCancelable(false);
         getAllLevel();
         getAllBodyParts();
@@ -305,6 +308,7 @@ public class AddExercisesFragment extends DialogFragment implements View.OnClick
                                 edt_restExercise.setText("");
                                 edt_urlVideoExercise.setText("");
                                 progressDialog.dismiss();
+                                isAdded = true;
                                 sendWithOtherThread();
 
                             } else {
@@ -393,7 +397,11 @@ public class AddExercisesFragment extends DialogFragment implements View.OnClick
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
+        if (isAdded) {
+            startActivity(new Intent(getActivity(), MainActivity.class));
 
+            Objects.requireNonNull(getActivity()).finish();
+        }
     }
 
     private void getAllUser() {
@@ -426,6 +434,7 @@ public class AddExercisesFragment extends DialogFragment implements View.OnClick
             }
         });
     }
+
     private void sendWithOtherThread() {
         new Thread(new Runnable() {
             @Override
@@ -483,5 +492,6 @@ public class AddExercisesFragment extends DialogFragment implements View.OnClick
         Scanner s = new Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next().replace(",", ",\n") : "";
     }
+
 }
 
