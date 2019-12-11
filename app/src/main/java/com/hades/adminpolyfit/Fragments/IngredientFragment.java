@@ -31,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -159,6 +160,7 @@ public class IngredientFragment extends Fragment implements View.OnClickListener
                     Type listType = new TypeToken<List<Ingredients>>() {
                     }.getType();
                     List<Ingredients> ingredientsList = gson.fromJson(jsonOutput, listType);
+                    Collections.reverse(ingredientsList);
                     setData(ingredientsList);
                     Log.e("Phaytv", /*exercisesList.get(0).getId() +*/":: List ingredient ::" + array);
 

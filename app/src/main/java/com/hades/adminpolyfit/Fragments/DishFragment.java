@@ -35,6 +35,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -166,6 +168,7 @@ public class DishFragment extends Fragment implements View.OnClickListener {
                     Type listType = new TypeToken<List<Dish>>() {
                     }.getType();
                     List<Dish> listDish = gson.fromJson(jsonOutput, listType);
+                    Collections.reverse(listDish);
                     setData(listDish);
                     Log.e("Phaytv", /*exercisesList.get(0).getId() +*/":: Success ::" + array);
                 }

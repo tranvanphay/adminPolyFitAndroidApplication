@@ -1,200 +1,228 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:layout_height="wrap_content"
     android:background="@color/black"
+    android:orientation="vertical"
     tools:context=".Fragments.AddExercisesFragment">
 
     <LinearLayout
-        android:layout_margin="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-           <LinearLayout
-               android:layout_width="match_parent"
-               android:layout_height="match_parent">
-               <ImageView
-                   android:id="@+id/imvBack"
-                   android:layout_gravity="center"
-                   android:src="@drawable/ic_back"
-                   android:layout_width="30dp"
-                   android:layout_height="30dp"/>
-               <TextView
-                   android:layout_marginLeft="15dp"
-                   android:layout_gravity="center"
-                   android:gravity="center"
-                   android:textSize="25sp"
-                   android:textColor="@color/white"
-                   android:text="Add exercise"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"/>
-           </LinearLayout>
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:orientation="vertical">
 
-
-
-    <LinearLayout
-        android:layout_marginTop="25dp"
-        android:layout_marginHorizontal="25dp"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/imv_imageExercise"
-            android:src="@drawable/null_image"
-            android:layout_gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"/>
         <LinearLayout
-            android:layout_marginTop="15dp"
-            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/imvBack"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_back" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center"
+                    android:text="Add exercise"
+                    android:textColor="@color/white"
+                    android:textSize="25sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="25dp"
+            android:layout_marginTop="25dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imv_imageExercise"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:src="@drawable/null_image" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Level"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="15sp" />
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/spinnerLevel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Bodyparts"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="15sp" />
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/spinnerBodyParts"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/edt_titleExercise"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="Title"
+                    android:textColor="@color/white" />
+
+                <EditText
+                    android:id="@+id/edt_introductionExercise"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="Introduction"
+                    android:inputType="textMultiLine"
+                    android:textColor="@color/white" />
+
+                <EditText
+                    android:id="@+id/edt_contentExercise"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="Content"
+                    android:inputType="textMultiLine"
+                    android:textColor="@color/white" />
+
+                <EditText
+                    android:id="@+id/edt_tipsExercise"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="Tips"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="3"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/edt_setsExercise"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:hint="Sets"
+                    android:inputType="number"
+                    android:textColor="@color/white" />
+
+                <EditText
+                    android:id="@+id/edt_repsExercise"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:hint="Reps"
+                    android:inputType="number"
+                    android:textColor="@color/white" />
+
+                <EditText
+                    android:id="@+id/edt_restExercise"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:hint="Rest"
+                    android:inputType="number"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/edt_urlVideoExercise"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="Video url"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-         <LinearLayout
-             android:orientation="horizontal"
-             android:layout_weight="2"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content">
-             <LinearLayout
-                 android:layout_weight="1"
-                 android:orientation="vertical"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content">
-                 <TextView
-                     android:textAlignment="center"
-                     android:textColor="@color/white"
-                     android:text="Level"
-                     android:textSize="15sp"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"/>
-                 <androidx.appcompat.widget.AppCompatSpinner
-                     android:layout_gravity="center"
-                     android:layout_width="match_parent"
-                     android:id="@+id/spinnerLevel"
-                     android:layout_height="wrap_content"/>
-             </LinearLayout>
-             <LinearLayout
-                 android:layout_weight="1"
-                 android:orientation="vertical"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content">
-                 <TextView
-                     android:textSize="15sp"
-                     android:textAlignment="center"
-                     android:textColor="@color/white"
-                     android:text="Bodyparts"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"/>
-                 <androidx.appcompat.widget.AppCompatSpinner
-                     android:layout_gravity="center"
-                     android:layout_width="match_parent"
-                     android:id="@+id/spinnerBodyParts"
-                     android:layout_height="wrap_content"/>
-             </LinearLayout>
-         </LinearLayout>
-        <EditText
-            android:id="@+id/edt_titleExercise"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/white"
-            android:hint="Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:id="@+id/edt_introductionExercise"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/white"
-            android:hint="Introduction"
-            android:inputType="textMultiLine"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:id="@+id/edt_contentExercise"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/white"
-            android:hint="Content"
-            android:inputType="textMultiLine"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:id="@+id/edt_tipsExercise"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/white"
-            android:hint="Tips"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_weight="3"
-            android:layout_height="wrap_content">
-            <EditText
-                android:id="@+id/edt_setsExercise"
-                android:layout_marginRight="5dp"
-                android:inputType="number"
-                android:textColor="@color/white"
-                android:hint="Sets"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <EditText
-                android:id="@+id/edt_repsExercise"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:inputType="number"
-                android:textColor="@color/white"
-                android:hint="Reps"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <EditText
-                android:id="@+id/edt_restExercise"
-                android:layout_marginLeft="5dp"
-                android:inputType="number"
-                android:textColor="@color/white"
-                android:hint="Rest"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-        <EditText
-            android:id="@+id/edt_urlVideoExercise"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/white"
-            android:hint="Video url"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true">
 
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/saveNewExercise"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="50dp"
+                    android:layout_marginBottom="10dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="15dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:text="Save"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="25sp" />
+                </androidx.cardview.widget.CardView>
+            </RelativeLayout>
+        </RelativeLayout>
     </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
- <RelativeLayout
-     android:layout_alignParentBottom="true"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content">
-     <androidx.cardview.widget.CardView
-         android:id="@+id/saveNewExercise"
-         app:cardBackgroundColor="@color/white"
-         app:cardCornerRadius="15dp"
-         android:layout_marginHorizontal="50dp"
-         android:layout_marginBottom="10dp"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content">
-         <TextView
-             android:textColor="@color/black"
-             android:textAlignment="center"
-             android:layout_margin="5dp"
-             android:text="Save"
-             android:textSize="25sp"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"/>
-     </androidx.cardview.widget.CardView>
- </RelativeLayout>
-    </RelativeLayout>
-</LinearLayout>
+</ScrollView>
