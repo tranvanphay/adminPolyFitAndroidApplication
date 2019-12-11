@@ -85,7 +85,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ViewHo
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        getAllDetailExercise(listExercise.get(position).getId(),holder);
+        /*getAllDetailExercise(listExercise.get(position).getId(),holder);*/
         holder.title.setText(listExercise.get(position).getTitle());
 //        Picasso.get().load(listExercise.get(position).getImage_url()).placeholder(R.drawable.loading).into(holder.imageExercise);
         Glide
@@ -152,7 +152,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ViewHo
         }
     }
 
-    private void getAllDetailExercise(Integer id, final ViewHolder viewHolder) {
+    /*private void getAllDetailExercise(Integer id, final ViewHolder viewHolder) {
         adminPolyfitServices.getAllDetailExercise(id).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -172,11 +172,11 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ViewHo
                     Type listType = new TypeToken<List<Bodyparts>>() {
                     }.getType();
                     bodypartsList = gson.fromJson(jsonOutput, listType);
-                    /*Log.e("PhayTranLOGGER",bodypartsList.get(0).getIdBodyPart()+"");*/
+                    *//*Log.e("PhayTranLOGGER",bodypartsList.get(0).getIdBodyPart()+"");*//*
                     if(!bodypartsList.isEmpty()){
                        bodyPartTitle= bodypartsList.get(0).getTitle();
                     }
-                    Log.e("Phaytv", /*exercisesList.get(0).getId() +*/":: ListBodyParts ::" + array);
+                    Log.e("Phaytv", *//*exercisesList.get(0).getId() +*//*":: ListBodyParts ::" + array);
                     System.out.println("Print object :::"+bodypartsList);
                 }
 
@@ -187,16 +187,16 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ViewHo
                 Toast.makeText(context, "Please check your connection", Toast.LENGTH_SHORT).show();
             }
         });
-    }
+    }*/
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+/*    @RequiresApi(api = Build.VERSION_CODES.N)
     private String joinList(List<Bodyparts> bodypartsList){
         String joinedTitle = bodypartsList.stream()
                 .map(Bodyparts::getTitle)
                 .collect(Collectors.joining(", "));
         Log.e("Joined",joinedTitle);
         return joinedTitle;
-    }
+    }*/
 
 
 }
